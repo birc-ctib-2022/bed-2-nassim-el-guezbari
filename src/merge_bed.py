@@ -35,13 +35,14 @@ def bed_before(elem1: BedLine, elem2: BedLine) -> bool:
     return True
 
 def merge_lists_generateor(list1: list[BedLine], list2: [BedLine]) -> Generator[BedLine, None, None]:
-    for (elem1, elem2) in zip(iter(list1),iter(list2)):
+    iter1,iter2= iter(list1), iter(list2)
+    for (elem1, elem2) in zip(iter1,iter2):
         if bed_before(elem1,elem2):
             yield elem1
         yield elem2
-    for elem1 in iter(list1):
+    for elem1 in iter1:
         yield elem1
-    for elem2 in iter(list2):
+    for elem2 in iter2:
         yield elem2
 
 def merge(f1: list[BedLine], f2: list[BedLine], outfile: TextIO) -> None:
