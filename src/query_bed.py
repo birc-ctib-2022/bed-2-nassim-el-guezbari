@@ -8,10 +8,25 @@ from bed import (
 )
 
 
-def extract_region(features: list[BedLine],
-                   start: int, end: int) -> list[BedLine]:
+def extract_region(features: list[BedLine], start: int, end: int) -> list[BedLine]:
     """Extract region chrom[start:end] and write it to outfile."""
-    return []  # FIXME: We want the actual region, not an empty list!
+    up_bound = len(features)
+    low_bound = 0
+    while up_bound > low_bound:
+        i = (up_bound + low_bound) // 2
+        if features[i].chrom_start < start:
+            low_bound = i + 1
+        else:
+            up_bound = i
+    if low_bound >= len(features):
+        return []
+    feats=[]
+    while features[low_bound].chrom_start < end:
+        feats.append(features[low_bound])
+        low_bound += 1
+        if low_bound == len(features):
+            break
+    return feats
 
 
 def main() -> None:
