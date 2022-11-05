@@ -60,7 +60,20 @@ Once you have implemented a lower bound search for the start of the range, imple
 
 *How do you use binary search to find the lower bound of a number? How did you have to modify the binary search algorithm?*
 
+   Normal binary search is in practice looking for a value x stoping as soon as x is found or returning false incase its not there.
+   We check if x is in between 0 and our upper bound (len(features)), then we check if x is the middel of our bounds and if its not we can see if x is in the upper half or lower half of our bounds effectivly cutting the interval we are searching in half with every check. We have modified the binary search to not stop incase it matches the middel value because there might be values
+   below that middel that we would then lose, so our search instead breaks when our bounds meet (lower_bound=upper bound).
+
 *Would anything be more difficult if the features covered ranges instead of single nucleotides (like real BED files)? What could go wrong, if anything?*
+
+   Yes, but i do think my code would be able to work with ranges though there are cases that is not covered by the current code.
+   Like incase of overlaps or features that go beyond either of the bounds making the algorithm unable to locate the start. 
+   So the sort function should work fine with ranges as well as merge but the query itself could in alot of cases run into issues.
 
 *We wrote a tool for merging two BED files, but what if we had a bunch of them? What would the complexity be if we merged them in, one at a time? What would the complexity be if we merged all of the files at the same time?*
 
+   Merging two files has the complexity O(m1+m2) with n1 and n2 being the lengths of the files so merging a third one in would be
+   O((m1+m2)+m3). But (incase i understand correctly) that is the same as O(m1+m2+m3) since repeated addition won't be affected by
+   parentheses so the complexity of merging them one at a time would be O(m1+m2+m3...+mn) (n being the number of files.).
+   I assume that for a computer the process must be the same for merging all at once so the implementation might be quite different
+   buti assume the complexity is still O(m1+m2+m3...+mn).
