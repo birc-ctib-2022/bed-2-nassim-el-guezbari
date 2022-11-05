@@ -3,7 +3,7 @@
 import argparse  # we use this module for option parsing. See main for details.
 
 import sys
-from typing import TextIO
+from typing import TextIO, Generator
 from bed import (
     parse_line, print_line, BedLine
 )
@@ -27,12 +27,28 @@ def read_bed_file(f: TextIO) -> list[BedLine]:
         res.append(feature)
 
     return res
+    
+def bed_before(elem1: BedLine, elem2: BedLine) -> bool:
+    for bedline in ['chrom', 'chrom_start', 'chrom_end']:
+        if getattr(elem1,bedline) > getattr(elem2,bedline):
+            return False
+    return True
 
+def merge_lists_generateor(list1: list[BedLine], list2: [BedLine]) -> Generator[BedLine, None, None]:
+    iter1,iter2= iter(list1), iter(list2)
+    for (elem1, elem2) in zip(iter1,iter2):
+        if bed_before(elem1,elem2):
+            yield elem1
+        yield elem2
+    for elem1 in iter1:
+        yield elem1
+    for elem2 in iter2:
+        yield elem2
 
 def merge(f1: list[BedLine], f2: list[BedLine], outfile: TextIO) -> None:
     """Merge features and write them to outfile."""
-    # FIXME: I have work to do here!
-
+    for elem in merge_lists_generateor(f1, f2):
+        print_line(elem, outfile)
 
 def main() -> None:
     """Run the program."""
